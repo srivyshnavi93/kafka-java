@@ -26,7 +26,9 @@ public class SimpleProducer {
         Properties props = new Properties();
 
         //Assign localhost id
-        props.put("bootstrap.servers", "localhost:9092");
+        System.out.println("Finding Server...");
+        props.put("bootstrap.servers", "kafka-broker:29092");
+        System.out.println("Server Found");
 
         //Set acknowledgements for producer requests.
         props.put("acks", "all");
