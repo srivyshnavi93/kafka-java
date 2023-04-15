@@ -9,15 +9,14 @@ import java.util.Properties;
 
 public class SimpleConsumer {
 
-    public Consumer<Long, String> createConsumer() {
+    public Consumer<Long, String> createConsumer(String topic) {
         final Properties props = new Properties();
-        String topic = "topic-1";
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "kafka-broker:29092");
+                "kafka-broker-1:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
                 "KafkaExampleConsumer");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                LongDeserializer.class.getName());
+                StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
                 StringDeserializer.class.getName());
 

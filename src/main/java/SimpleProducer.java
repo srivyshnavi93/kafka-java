@@ -29,7 +29,7 @@ public class SimpleProducer {
 
         //Assign localhost id
         System.out.println("Finding Server...");
-        props.put("bootstrap.servers", "kafka-broker:29092");
+        props.put("bootstrap.servers", "kafka-broker-1:9092");
         System.out.println("Server Found");
 
         //Set acknowledgements for producer requests.
@@ -52,12 +52,12 @@ public class SimpleProducer {
         System.out.println("Message sent successfully");
         producer.close();
 
-        callConsumer();
+        callConsumer(topicName);
     }
 
-    public static void callConsumer(){
+    public static void callConsumer(String topic){
         SimpleConsumer simpleConsumer = new SimpleConsumer();
-        final Consumer<Long, String> consumer = simpleConsumer.createConsumer();
+        final Consumer<Long, String> consumer = simpleConsumer.createConsumer(topic);
 
         final int giveUp = 100;   int noRecordsCount = 0;
 
@@ -72,7 +72,7 @@ public class SimpleProducer {
             }
 
             consumerRecords.forEach(record -> {
-                System.out.printf("Consumer Record:(%d, %s, %d, %d)\n",
+                System.out.printf("Consumer Record:(%s, %s, %s, %s)\n",
                         record.key(), record.value(),
                         record.partition(), record.offset());
             });
