@@ -1,4 +1,6 @@
 //import util.properties packages
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -49,5 +51,35 @@ public class SimpleProducer {
                     Integer.toString(i), Integer.toString(i))).get();
         System.out.println("Message sent successfully");
         producer.close();
+
+        callConsumer();
+    }
+
+    public static void callConsumer(){
+        SimpleConsumer simpleConsumer = new SimpleConsumer();
+        final Consumer<Long, String> consumer = simpleConsumer.createConsumer();
+
+        final int giveUp = 100;   int noRecordsCount = 0;
+
+        while (true) {
+            final ConsumerRecords<Long, String> consumerRecords =
+                    consumer.poll(1000);
+
+            if (consumerRecords.count()==0) {
+                noRecordsCount++;
+                if (noRecordsCount > giveUp) break;
+                else continue;
+            }
+
+            consumerRecords.forEach(record -> {
+                System.out.printf("Consumer Record:(%d, %s, %d, %d)\n",
+                        record.key(), record.value(),
+                        record.partition(), record.offset());
+            });
+
+            consumer.commitAsync();
+        }
+        consumer.close();
+        System.out.println("DONE");
     }
 }
